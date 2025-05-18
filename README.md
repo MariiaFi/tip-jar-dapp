@@ -17,7 +17,7 @@ A simple Web3 dApp that allows users to send ETH tips with a short message. Buil
 - Hardhat (optional)
 
 ## Project Structure
-.
+".
 ├── web3-tip-jar/
 ├── ├── contracts/
 ├── │ └── TipJar.sol
@@ -26,3 +26,4 @@ A simple Web3 dApp that allows users to send ETH tips with a short message. Buil
 ├── ├── test/
 ├── │ └── testTipJar.js
 └── ├── README.md
+"
