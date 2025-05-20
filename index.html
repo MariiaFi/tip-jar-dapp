@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Tip Jar dApp</title>
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body style="text-align: center; background-color: #111; color: white; font-family: sans-serif;">
+
+  <h1>
+    <span class="material-icons" style="vertical-align: middle; font-size: 36px; color: rgb(8, 255, 169);">
+      volunteer_activism
+    </span>
+    Send a Tip
+  </h1>
+
+  <p><strong>Current wallet:</strong> <span id="wallet">Not connected</span></p>
+
+  <input id="messageInput" placeholder="Write a message..." style="padding: 8px; width: 250px;" />
+  <button onclick="sendTip()" style="padding: 8px 16px; margin-left: 10px; background-color: #00e676; border: none; color: black; font-weight: bold; border-radius: 5px;">
+    Send Tip (0.01 ETH)
+  </button>
+
+  <p><strong>Status:</strong> <span id="status">Idle</span></p>
+  <div id="spinner" style="display: none; font-size: 20px; margin-top: 10px;">⏳ Sending transaction...</div>
+
+  <h2>Tip History</h2>
+  <div id="tipList" style="margin-top: 20px;"></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/ethers@6.6.2/dist/ethers.umd.min.js"></script>
+  <script>
+    const contractAddress = "0x5B247319598251532C5bA0Afbf22E3000533eB00";
+    const contractABI = [
+      {
+        "inputs": [{ "internalType": "string", "name": "message", "type": "string" }],
+        "name": "sendTip",
+        "outputs": [],
+        "stateMutability": "payable",
+        "type": "function"
+      },
+      {
+        "inputs": [],
+        "name": "getTips",
+        "outputs": [{
+          "components": [
+            { "internalType": "address", "name": "from", "type": "address" },
+            { "internalType": "uint256", "name": "amount", "type": "uint256" },
+            { "internalType": "string", "name": "message", "type": "string" }
+          ],
+          "internalType": "struct TipJar.Tip[]",
+          "name": "",
+          "type": "tuple[]"
+        }],
+        "stateMutability": "view",
+        "type": "function"
+      }
+    ];
+
+    let signer;
+    let contract;
+
+    async function connectWallet() {
+      if (!window.ethereum) {
+        alert("Please install MetaMask");
+        return;
+      }
+
+      const provider = new ethers.BrowserProvider(window.ethereum);
+      await provider.send("eth_requestAccounts", []);
+      signer = await provider.getSigner();
+
+      const address = await signer.getAddress();
+      document.getElementById("wallet").innerText = address;
+      contract = new ethers.Contract(contractAddress, contractABI, signer);
+
+      loadTips();
+    }
+
+    async function sendTip() {
+      const message = document.getElementById("messageInput").value.trim();
+      const status = document.getElementById("status");
+      const spinner = document.getElementById("spinner");
+
+      if (!signer || !contract) {
+        alert("Please connect your wallet first.");
+        return;
+      }
+
+      if (!message) {
+        alert("Message cannot be empty.");
+        return;
+      }
+
+      try {
+        status.innerText = "Sending...";
+        spinner.style.display = "block";
+
+        const tx = await contract.sendTip(message, {
+          value: ethers.parseEther("0.01"),
+        });
+
+        await tx.wait();
+        status.innerText = "Tip sent!";
+        document.getElementById("messageInput").value = "";
+        loadTips();
+      } catch (err) {
+        console.error(err);
+        status.innerText = "Error sending tip";
+        alert("Something went wrong: " + err.message);
+      } finally {
+        spinner.style.display = "none";
+      }
+    }
+
+    async function loadTips() {
+      try {
+        const tips = await contract.getTips();
+        const container = document.getElementById("tipList");
+        container.innerHTML = "";
+
+        for (const tip of tips) {
+          const div = document.createElement("div");
+          div.style.marginBottom = "10px";
+          div.innerText = `💌 "${tip.message}" — ${ethers.formatEther(tip.amount)} ETH from ${tip.from}`;
+          container.appendChild(div);
+        }
+      } catch (err) {
+        console.error("Failed to load tips:", err);
+      }
+    }
+
+    connectWallet();
+  </script>
+</body>
+</html>
