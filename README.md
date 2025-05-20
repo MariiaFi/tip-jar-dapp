@@ -18,12 +18,16 @@ A simple Web3 dApp that allows users to send ETH tips with a short message. Buil
 
 ## Project Structure
 ```
-web3-tip-jar/
+tip-jar-dapp/
 ├── contracts/
 │   └── TipJar.sol
-├── frontend/
-│   └── index.html
-├── test/
-│   └── testTipJar.js
+├── scripts/
+│   └── deploy.js
+├── index.html
+├── style.css
 ├── README.md
+├── hardhat.config.js
+├── .env.example
+├── .gitignore
+└── package.json
 ```
