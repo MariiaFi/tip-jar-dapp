@@ -8,25 +8,25 @@
 </head>
 <body style="text-align: center; background-color: #111; color: white; font-family: sans-serif;">
 
-  <h1>
-    <span class="material-icons" style="vertical-align: middle; font-size: 36px; color: rgb(8, 255, 169);">
-      volunteer_activism
-    </span>
-    Send a Tip
-  </h1>
+  <div class="wallet-box">
+      <p><strong>Current wallet:</strong> <span id="wallet">Not connected</span></p>
 
-  <p><strong>Current wallet:</strong> <span id="wallet">Not connected</span></p>
+      <textarea id="messageInput" placeholder="✍️ Write a kind message..."></textarea>
 
-  <input id="messageInput" placeholder="Write a message..." style="padding: 8px; width: 250px;" />
-  <button onclick="sendTip()" style="padding: 8px 16px; margin-left: 10px; background-color: #00e676; border: none; color: black; font-weight: bold; border-radius: 5px;">
-    Send Tip (0.01 ETH)
-  </button>
+      <div class="button-group">
+        <button onclick="sendTip()" id="send-tip">Send Tip (0.01 ETH)</button>
+      </div>
 
-  <p><strong>Status:</strong> <span id="status">Idle</span></p>
-  <div id="spinner" style="display: none; font-size: 20px; margin-top: 10px;">⏳ Sending transaction...</div>
+      <p><strong>Status:</strong> <span id="status">Idle</span></p>
+      <div id="spinner" style="display: none;">⏳ Sending transaction...</div>
+    </div>
 
-  <h2>Tip History</h2>
-  <div id="tipList" style="margin-top: 20px;"></div>
+    <div class="tip-history">
+      <h2>Tip History</h2>
+      <div id="tipList"></div>
+    </div>
+  </div>
+
 
   <script src="https://cdn.jsdelivr.net/npm/ethers@6.6.2/dist/ethers.umd.min.js"></script>
   <script>
