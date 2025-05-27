@@ -31,3 +31,14 @@ tip-jar-dapp/
 ├── .gitignore
 └── package.json
 ```
+
+## ⚠️ Disclaimer
+
+This dApp is a personal project created for **educational purposes only**.
+
+It is not a licensed gambling platform, nor is it intended for real-money usage.  
+Participation in the raffle is based on voluntary blockchain interactions (tips),  
+and there are no guarantees, no promises of return, and no obligations of payout.
+
+Use at your own risk. The developer is not liable for any loss, damage, or unexpected outcome.
+
